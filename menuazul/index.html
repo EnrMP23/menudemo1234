@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Menú | Mar · Azul</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts: Poppins + Playfair Display -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.5;
+        }
+
+        /* Layout principal: flex en escritorio */
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* BARRA LATERAL (escritorio) */
+        .sidebar {
+            width: 300px;
+            background-color: #ffffff;
+            border-right: 1px solid #e2e8f0;
+            padding: 2rem 1.5rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .sidebar-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0f4c5c;
+            line-height: 1.2;
+        }
+
+        .sidebar-header p {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+            letter-spacing: 1px;
+        }
+
+        /* CARRITO EN SIDEBAR (escritorio) */
+        .sidebar-cart {
+            background: #f8fafc;
+            border-radius: 28px;
+            padding: 1.2rem;
+            border: 2px solid #e76f51;
+            margin-top: auto;
+        }
+
+        .cart-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #0f4c5c;
+        }
+        .cart-header span {
+            background: #ffe0d0;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+        }
+
+        .cart-items {
+            list-style: none;
+            margin-bottom: 1rem;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px dashed #cbd5e1;
+            font-size: 0.9rem;
+        }
+
+        .cart-item-info {
+            flex: 2;
+        }
+        .cart-item-name {
+            font-weight: 600;
+            color: #0f4c5c;
+        }
+        .cart-item-price {
+            color: #e76f51;
+        }
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .cart-qty {
+            background: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            font-weight: 600;
+            border: 1px solid #e76f51;
+        }
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #b85c5c;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #ffe0d0;
+            transition: 0.2s;
+        }
+        .remove-btn:hover {
+            background: #ffc8b0;
+            color: #b71c1c;
+        }
+
+        .cart-total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0f4c5c;
+            border-top: 2px solid #e76f51;
+            padding-top: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .whatsapp-btn {
+            width: 100%;
+            background: #25D366;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
+            transition: background 0.2s;
+        }
+        .whatsapp-btn:hover {
+            background: #20b859;
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #94a3b8;
+            padding: 1rem 0;
+            font-style: italic;
+        }
+
+        /* CONTENIDO PRINCIPAL */
+        .main-content {
+            flex: 1;
+            padding: 2.5rem;
+            background: #ffffff;
+        }
+
+        .header {
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e76f51;
+            padding-bottom: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #0f4c5c;
+            letter-spacing: -0.5px;
+        }
+
+        .header .sub {
+            font-size: 1.1rem;
+            color: #475569;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .header .sub i {
+            color: #e76f51;
+        }
+
+        .status-indicator {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* Botones de categoría ahora en el main, debajo del header */
+        .main-content .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.7rem 1.4rem;
+            border: none;
+            background: #f1f5f9;
+            border-radius: 40px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .nav-btn i {
+            font-size: 1.2rem;
+            color: #e76f51;
+        }
+
+        .nav-btn:hover {
+            background-color: #e76f51;
+            color: white;
+        }
+        .nav-btn:hover i {
+            color: white;
+        }
+
+        .nav-btn.active {
+            background-color: #e76f51;
+            color: white;
+        }
+        .nav-btn.active i {
+            color: white;
+        }
+
+        /* Secciones */
+        .menu-section {
+            margin-bottom: 3.5rem;
+            scroll-margin-top: 5rem; /* para compensar la altura de los botones fijos */
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: #0f4c5c;
+            margin-bottom: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .section-title i {
+            font-size: 2rem;
+            color: #e76f51;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .menu-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 12px 30px -8px rgba(0, 50, 70, 0.12);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #f0f4f8;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 35px -10px #0f4c5c40;
+        }
+
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #0f4c5c;
+        }
+
+        .card-price {
+            background: #e76f51;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.25rem 1rem;
+            border-radius: 60px;
+            letter-spacing: 0.5px;
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: #475569;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-tags {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .card-tags i {
+            color: #e76f51;
+            margin-right: 0.25rem;
+        }
+
+        .add-btn {
+            background: #0f4c5c;
+            border: none;
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 4px 8px rgba(15, 76, 92, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .add-btn:hover {
+            background: #1a6a7a;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 4rem;
+            text-align: center;
+            border-top: 2px dashed #cbd5e1;
+            padding-top: 2rem;
+            color: #475569;
+        }
+
+        .contact-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .demo-note {
+            background-color: #f1f5f9;
+            padding: 0.7rem 2rem;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            color: #1e293b;
+            display: inline-block;
+        }
+
+        .footer a {
+            color: #e76f51;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* ===== MÓVIL: BOTÓN FLOTANTE Y DRAWER ===== */
+        .cart-fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 65px;
+            height: 65px;
+            background-color: #e76f51;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(231, 111, 81, 0.5);
+            cursor: pointer;
+            z-index: 1000;
+            border: 3px solid white;
+            transition: transform 0.2s;
+        }
+        .cart-fab:hover {
+            transform: scale(1.05);
+        }
+        .cart-fab-icon {
+            font-size: 2rem;
+            color: white;
+        }
+        .cart-fab-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #0f4c5c;
+            color: white;
+            font-weight: bold;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            border: 2px solid white;
+        }
+
+        .cart-drawer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top-left-radius: 32px;
+            border-top-right-radius: 32px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+            padding: 1.5rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+            z-index: 1001;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-top: 4px solid #e76f51;
+        }
+        .cart-drawer.open {
+            transform: translateY(0);
+        }
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .drawer-header h2 {
+            font-size: 1.8rem;
+            color: #0f4c5c;
+        }
+        .close-drawer {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #e76f51;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #f1f5f9;
+        }
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        .drawer-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .app {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: sticky;
+                top: 0;
+                z-index: 20;
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            }
+
+            .sidebar-header {
+                display: none;
+            }
+
+            .sidebar-cart {
+                display: none;  /* Ocultamos carrito lateral en móvil */
+            }
+
+            .main-content {
+                padding: 1.5rem;
+            }
+
+            .main-content .nav-links {
+                margin-bottom: 1.5rem;
+                justify-content: center;
+            }
+
+            .nav-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .cart-fab {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            .card-price {
+                align-self: flex-start;
+            }
+            .contact-row {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Barra lateral (escritorio): solo carrito -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Mar · Azul</h2>
+                <p>cocina de mar</p>
+            </div>
+
+            <!-- CARRITO LATERAL (solo escritorio) -->
+            <div class="sidebar-cart" id="sidebarCart">
+                <div class="cart-header">
+                    🛒 Tu pedido <span id="cartCountDesktop">0</span>
+                </div>
+                <ul class="cart-items" id="cartListDesktop"></ul>
+                <div id="cartEmptyDesktop" class="empty-cart">Carrito vacío</div>
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cartTotalDesktop">$0</span>
+                </div>
+                <button class="whatsapp-btn" id="sendWhatsAppBtnDesktop">
+                    <i class="fab fa-whatsapp"></i> Enviar por WhatsApp
+                </button>
+            </div>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <div class="header">
+                <div>
+                    <h1>Mar · Azul</h1>
+                    <div class="sub"><i class="fas fa-anchor"></i> Desde el océano a tu mesa</div>
+                </div>
+                <div class="status-indicator" id="statusIndicator"></div>
+            </div>
+
+            <!-- Botones de categoría ahora aquí, debajo del header -->
+            <nav class="nav-links" id="categoryNav"></nav>
+
+            <!-- Las secciones del menú se inyectarán aquí -->
+            <div id="menuContainer"></div>
+
+            <footer class="footer">
+                <div class="contact-row">
+                    <span><i class="fas fa-clock"></i> Mar-Dom 12:00-21:00</span>
+                    <span><i class="fas fa-map-pin"></i> Hermosillo, Sonora</span>
+                    <span><i class="fas fa-phone-alt"></i> +52 xxxxxxxxx</span>
+                </div>
+                <div class="demo-note">
+                    ⚡ Menú demo · imágenes Unsplash · precios de referencia
+                </div>
+                <p style="margin-top: 1.5rem; font-size:0.9rem">
+                    🌊 <a href="#">Instagram</a> · <a href="#">Facebook</a> · <a href="#">Reservaciones</a> 🌊
+                </p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- BOTÓN FLOTANTE MÓVIL -->
+    <div class="cart-fab" id="cartFab">
+        <span class="cart-fab-icon">🛒</span>
+        <span class="cart-fab-badge" id="cartFabBadge">0</span>
+    </div>
+
+    <!-- OVERLAY Y DRAWER MÓVIL -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="drawer-header">
+            <h2>Tu pedido</h2>
+            <button class="close-drawer" id="closeDrawerBtn">✕</button>
+        </div>
+        <ul class="cart-items" id="cartListDrawer"></ul>
+        <div id="cartEmptyDrawer" class="empty-cart">Carrito vacío</div>
+        <div class="cart-total">
+            <span>Total:</span>
+            <span id="cartTotalDrawer">$0</span>
+        </div>
+        <button class="whatsapp-btn" id="sendWhatsAppBtnDrawer">
+            <i class="fab fa-whatsapp"></i> Enviar por WhatsApp
+        </button>
+    </div>
+
+    <script>
+        (function() {
+            // ----- LISTA DE PRODUCTOS (con imágenes y descripciones del diseño) -----
+            const menuItems = [
+                // Entradas
+                { id: 'e1', category: 'Entradas', name: 'Ceviche de Camarón', price: 9.50, image: 'contenido/1617124296442.jpeg', desc: 'Camarón fresco cocido en limón, cebolla morada, cilantro, pepino y tomate. Con tostadas.', tags: 'Picor suave', icon: 'fa-pepper-hot' },
+                { id: 'e2', category: 'Entradas', name: 'Ostiones del día', price: 12.00, image: 'contenido/ostiones_al-natural-scaled-1.jpg', desc: 'Media docena de ostiones frescos, limón, salsa cocktail y mignonette.', tags: 'Crudos', icon: 'fa-water' },
+                { id: 'e3', category: 'Entradas', name: 'Tostada de Pulpo', price: 8.50, image: 'contenido/lacanja.jpg', desc: 'Pulpo a la plancha, mayonesa de chipotle, aguacate y pico de gallo.', tags: 'A la plancha', icon: 'fa-fire' },
+                { id: 'e4', category: 'Entradas', name: 'Aguachile Verde', price: 11.00, image: 'contenido/sddefault.jpg', desc: 'Camarón en jugo de limón, pepino, cebolla morada, cilantro y chile serrano.', tags: 'Refrescante', icon: 'fa-leaf' },
+                // Sopas
+                { id: 's1', category: 'Sopas & Caldillos', name: 'Caldo de Camarón', price: 12.50, image: 'https://images.unsplash.com/photo-1559847844-5315695dadae?w=600&h=400&fit=crop&auto=format', desc: 'Caldo rojo con camarón seco y fresco, papa, zanahoria, chile guajillo y epazote.', tags: 'Tradicional', icon: 'fa-pepper-hot' },
+                { id: 's2', category: 'Sopas & Caldillos', name: 'Sopa de Mariscos', price: 14.00, image: 'contenido/sopa-de-mariscos_recetas_chef-oropeza-jpg.jpeg', desc: 'Caldo de pescado con camarón, pulpo, mejillón, almeja y pescado blanco.', tags: 'La casa', icon: 'fa-fish' },
+                { id: 's3', category: 'Sopas & Caldillos', name: 'Caldo de Pescado', price: 11.00, image: 'contenido/receta-de-caldo-de-pescado-con-camaron.jpg.webp', desc: 'Caldo claro con pescado, verduras, arroz y perejil. Ligero y reconfortante.', tags: 'Ligero', icon: 'fa-heart' },
+                // Platos fuertes
+                { id: 'p1', category: 'Platos Fuertes', name: 'Filete Veracruzano', price: 16.50, image: 'contenido/filete-pescado-veracruzana.jpg', desc: 'Pescado en salsa de jitomate, aceitunas, alcaparras y chiles güeros. Con arroz.', tags: 'Veracruz', icon: 'fa-olive' },
+                { id: 'p2', category: 'Platos Fuertes', name: 'Camarones al Ajillo', price: 17.00, image: 'https://images.unsplash.com/photo-1625943553852-781c6dd46faa?w=600&h=400&fit=crop&auto=format', desc: 'Salteados con ajo, guindilla y perejil. Acompañados de papas a la francesa.', tags: 'Al ajillo', icon: 'fa-garlic' },
+                { id: 'p3', category: 'Platos Fuertes', name: 'Pulpo a la Parrilla', price: 19.00, image: 'contenido/t5CGCBcDX9FWWeHZC-2400-x.webp', desc: 'Pulpo tierno asado, con puré de papa al romero y reducción de tinta.', tags: 'Parrilla', icon: 'fa-fire' },
+                { id: 'p4', category: 'Platos Fuertes', name: 'Pescado Zarandeado', price: 22.00, image: 'contenido/Pescado-Zarandeado-6.jpg.webp', desc: 'Entero marinado en salsa de soya, adobo y mantequilla, asado a las brasas.', tags: 'Especialidad', icon: 'fa-utensils' },
+                // Combinados
+                { id: 'co1', category: 'Combinados', name: 'Cóctel de Camarones', price: 13.00, image: 'contenido/1366_521.jpg', desc: 'Camarones en salsa cocktail, aguacate, cebolla y cilantro. Con galletas.', tags: 'Refrescante', icon: 'fa-cocktail' },
+                { id: 'co2', category: 'Combinados', name: 'Parrillada de Mariscos', price: 28.00, image: 'contenido/7wYJmQngf74kCuCGb-x-2000.webp', desc: 'Camarón, pulpo, pescado, mejillón y callo de hacha asados. Para compartir.', tags: 'Para compartir', icon: 'fa-crown' },
+                { id: 'co3', category: 'Combinados', name: 'Tacos de Pescado (3pz)', price: 9.50, image: 'contenido/Tacos-de-pescado.jpg.webp', desc: 'Pescado empanizado, repollo morado, crema de chipotle y salsa de mango.', tags: 'Baja style', icon: 'fa-taco' },
+                { id: 'co4', category: 'Combinados', name: 'Tostada Mixta', price: 10.00, image: 'contenido/lacanja.jpg', desc: 'Camarón, pulpo, ceviche de pescado y aguacate en tostada crujiente.', tags: 'Mixta', icon: 'fa-star' },
+                // Bebidas
+                { id: 'b1', category: 'Bebidas', name: 'Margarita de la Casa', price: 7.00, image: 'contenido/Cocktail_de_margarita_refrescante_en_casa.jpg.webp', desc: 'Tequila, limón, naranja y toque de chamoy.', tags: 'Clásica', icon: 'fa-citrus' },
+                { id: 'b2', category: 'Bebidas', name: 'Michelada', price: 5.50, image: 'contenido/a71baf63-719e-46cb-9359-1cbd13308e1b_source-aspect-ratio_1600w_0.jpg', desc: 'Cerveza con limón, salsa inglesa, chile y sal.', tags: 'Preparada', icon: 'fa-glass-cheers' },
+                { id: 'b3', category: 'Bebidas', name: 'Agua de Coco', price: 4.00, image: 'https://images.unsplash.com/photo-1595981267035-7b04ca84a82d?w=600&h=400&fit=crop&auto=format', desc: 'Agua de coco fría, en su envase natural.', tags: 'Natural', icon: 'fa-coconut' },
+                { id: 'b4', category: 'Bebidas', name: 'Cerveza Artesanal', price: 5.00, image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600&h=400&fit=crop&auto=format', desc: 'Selección de cervezas locales: Lager, IPA, Porter.', tags: 'Artesanal', icon: 'fa-beer' }
+            ];
+
+            // ----- estado del carrito -----
+            let cart = {};
+
+            // elementos del DOM
+            const menuContainer = document.getElementById('menuContainer');
+            const categoryNav = document.getElementById('categoryNav');
+            // elementos escritorio
+            const cartListDesktop = document.getElementById('cartListDesktop');
+            const cartEmptyDesktop = document.getElementById('cartEmptyDesktop');
+            const cartCountDesktop = document.getElementById('cartCountDesktop');
+            const cartTotalDesktop = document.getElementById('cartTotalDesktop');
+            const sendBtnDesktop = document.getElementById('sendWhatsAppBtnDesktop');
+            // elementos móvil
+            const cartFab = document.getElementById('cartFab');
+            const cartFabBadge = document.getElementById('cartFabBadge');
+            const cartDrawer = document.getElementById('cartDrawer');
+            const drawerOverlay = document.getElementById('drawerOverlay');
+            const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+            const cartListDrawer = document.getElementById('cartListDrawer');
+            const cartEmptyDrawer = document.getElementById('cartEmptyDrawer');
+            const cartTotalDrawer = document.getElementById('cartTotalDrawer');
+            const sendBtnDrawer = document.getElementById('sendWhatsAppBtnDrawer');
+            const statusIndicator = document.getElementById('statusIndicator');
+
+            // Utilidades
+            const formatPrice = (value) => `$${value.toFixed(2)}`;
+
+            function slugify(text) {
+                return text.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-');
+            }
+
+            // Renderizar botones de categorías (navegación)
+            function renderCategoryButtons() {
+                const categories = [...new Set(menuItems.map(item => item.category))];
+                let buttonsHtml = '';
+                categories.forEach(cat => {
+                    const slug = slugify(cat);
+                    buttonsHtml += `<button class="nav-btn" data-category="${slug}"><i class="fas ${getIconForCategory(cat)}"></i> ${cat}</button>`;
+                });
+                categoryNav.innerHTML = buttonsHtml;
+
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const catSlug = btn.dataset.category;
+                        const targetElement = document.getElementById(`category-${catSlug}`);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                        // Actualizar clase activa
+                        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                    });
+                });
+            }
+
+            // Helper para iconos (solo para mantener coherencia)
+            function getIconForCategory(cat) {
+                const map = {
+                    'Entradas': 'fa-shrimp',
+                    'Sopas & Caldillos': 'fa-thermometer-half',
+                    'Platos Fuertes': 'fa-fish',
+                    'Combinados': 'fa-utensil-spoon',
+                    'Bebidas': 'fa-cocktail'
+                };
+                return map[cat] || 'fa-utensils';
+            }
+
+            // Renderizar menú completo
+            function renderMenu() {
+                const categories = {};
+                menuItems.forEach(item => {
+                    if (!categories[item.category]) categories[item.category] = [];
+                    categories[item.category].push(item);
+                });
+
+                let html = '';
+                for (let cat in categories) {
+                    const slug = slugify(cat);
+                    html += `<section id="category-${slug}" class="menu-section">`;
+                    html += `<h2 class="section-title"><i class="fas ${getIconForCategory(cat)}"></i> ${cat}</h2>`;
+                    html += '<div class="menu-grid">';
+                    categories[cat].forEach(item => {
+                        html += `
+                            <div class="menu-card" data-id="${item.id}">
+                                <img class="card-img" src="${item.image}" alt="${item.name}" loading="lazy">
+                                <div class="card-content">
+                                    <div class="card-header">
+                                        <span class="card-name">${item.name}</span>
+                                        <span class="card-price">${formatPrice(item.price)}</span>
+                                    </div>
+                                    <div class="card-desc">${item.desc}</div>
+                                    <div class="card-footer">
+                                        <div class="card-tags"><i class="fas ${item.icon}"></i> ${item.tags}</div>
+                                        <button class="add-btn" data-id="${item.id}"><i class="fas fa-plus-circle"></i> Añadir</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += '</div></section>';
+                }
+                menuContainer.innerHTML = html;
+
+                // Añadir eventos a botones "Añadir"
+                document.querySelectorAll('.add-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        addToCart(btn.dataset.id);
+                    });
+                });
+            }
+
+            // Funciones del carrito
+            function addToCart(id) {
+                if (cart[id]) cart[id] += 1;
+                else cart[id] = 1;
+                updateAllCarts();
+            }
+
+            function removeFromCart(id) {
+                delete cart[id];
+                updateAllCarts();
+            }
+
+            function getCartArray() {
+                return Object.entries(cart).map(([id, qty]) => {
+                    const item = menuItems.find(i => i.id === id);
+                    return { ...item, quantity: qty };
+                }).filter(i => i);
+            }
+
+            function updateAllCarts() {
+                const cartArray = getCartArray();
+                const totalItems = cartArray.reduce((acc, i) => acc + i.quantity, 0);
+                const totalPrice = cartArray.reduce((acc, i) => acc + (i.price * i.quantity), 0);
+
+                // Actualizar contador flotante
+                cartFabBadge.textContent = totalItems;
+
+                // Actualizar escritorio
+                cartCountDesktop.textContent = totalItems;
+                cartTotalDesktop.textContent = formatPrice(totalPrice);
+                updateCartList(cartArray, cartListDesktop, cartEmptyDesktop);
+
+                // Actualizar drawer
+                cartTotalDrawer.textContent = formatPrice(totalPrice);
+                updateCartList(cartArray, cartListDrawer, cartEmptyDrawer);
+            }
+
+            function updateCartList(cartArray, listElement, emptyElement) {
+                if (cartArray.length === 0) {
+                    listElement.innerHTML = '';
+                    emptyElement.style.display = 'block';
+                } else {
+                    emptyElement.style.display = 'none';
+                    let html = '';
+                    cartArray.forEach(item => {
+                        html += `
+                            <li class="cart-item">
+                                <div class="cart-item-info">
+                                    <div class="cart-item-name">${item.name}</div>
+                                    <div class="cart-item-price">${formatPrice(item.price)}</div>
+                                </div>
+                                <div class="cart-item-actions">
+                                    <span class="cart-qty">${item.quantity}</span>
+                                    <button class="remove-btn" data-id="${item.id}"><i class="fas fa-times"></i></button>
+                                </div>
+                            </li>
+                        `;
+                    });
+                    listElement.innerHTML = html;
+                    listElement.querySelectorAll('.remove-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            removeFromCart(btn.dataset.id);
+                        });
+                    });
+                }
+            }
+
+            // Enviar WhatsApp
+            function sendWhatsAppOrder() {
+                const cartArray = getCartArray();
+                if (cartArray.length === 0) {
+                    alert('Agrega algunos productos al carrito antes de enviar.');
+                    return;
+                }
+
+                const total = cartArray.reduce((acc, i) => acc + (i.price * i.quantity), 0);
+                let message = '🦐 *Nuevo pedido - Mar · Azul* 🦐\n\n';
+                cartArray.forEach(item => {
+                    message += `• ${item.name} x${item.quantity} = ${formatPrice(item.price * item.quantity)}\n`;
+                });
+                message += `\n📌 *TOTAL: ${formatPrice(total)}*`;
+                message += `\n\n📍 Dirección: Hermosillo, Sonora (para recoger)`;
+                message += `\n⏰ Horario: Mar-Dom 12:00-21:00`;
+                message += `\n\n¡Gracias por tu orden! Te esperamos.`;
+
+                const phone = '526625228513'; // Número del footer
+                window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+            }
+
+            // Manejo del drawer móvil
+            function openDrawer() {
+                cartDrawer.classList.add('open');
+                drawerOverlay.classList.add('show');
+            }
+
+            function closeDrawer() {
+                cartDrawer.classList.remove('open');
+                drawerOverlay.classList.remove('show');
+            }
+
+            // Indicador de abierto/cerrado (simulado con horario fijo)
+            function updateOpenStatus() {
+                const now = new Date();
+                const day = now.getDay(); // 0 domingo, 1 lunes...
+                const hour = now.getHours();
+                // Martes (2) a domingo (0) inclusive, y hora entre 12 y 21 (excluye 21:00 en adelante)
+                const isOpenDay = (day >= 2 && day <= 6) || day === 0;
+                const isOpenTime = hour >= 12 && hour < 21;
+                const isOpen = isOpenDay && isOpenTime;
+
+                if (isOpen) {
+                    statusIndicator.innerHTML = '● Abierto';
+                    statusIndicator.style.color = '#2e7d32';
+                } else {
+                    statusIndicator.innerHTML = '● Cerrado';
+                    statusIndicator.style.color = '#c62828';
+                }
+            }
+
+            // Event listeners
+            cartFab.addEventListener('click', openDrawer);
+            closeDrawerBtn.addEventListener('click', closeDrawer);
+            drawerOverlay.addEventListener('click', closeDrawer);
+            sendBtnDesktop.addEventListener('click', sendWhatsAppOrder);
+            sendBtnDrawer.addEventListener('click', sendWhatsAppOrder);
+
+            // Inicializar
+            renderCategoryButtons();
+            renderMenu();
+            updateAllCarts();
+            updateOpenStatus();
+
+            // Resaltar botón de categoría al hacer scroll (opcional)
+            window.addEventListener('scroll', () => {
+                const sections = document.querySelectorAll('.menu-section');
+                const navButtons = document.querySelectorAll('.nav-btn');
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 200;
+                    const sectionBottom = sectionTop + section.offsetHeight;
+                    if (window.scrollY >= sectionTop && window.scrollY < sectionBottom) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                navButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.category === current?.replace('category-', '')) {
+                        btn.classList.add('active');
+                    }
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
